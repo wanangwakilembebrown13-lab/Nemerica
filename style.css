@@ -11,11 +11,19 @@
     --radius: 12px;
 }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+body.dark-mode {
+    --bg: #0f172a;
+    --card-bg: #1e293b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --primary: #38bdf8;
+    --accent: #38bdf8;
+    --border: #334155;
+    --success: #34d399;
+    --error: #f87171;
 }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -26,40 +34,48 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 header {
     text-align: center;
-    margin: 30px 0 40px;
+    margin: 20px 0 30px;
     max-width: 600px;
+    width: 100%;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
 
 header h1 {
     font-family: 'Lora', serif;
-    font-size: 3rem;
+    font-size: 2.8rem;
     color: var(--primary);
     letter-spacing: -1px;
-    margin-bottom: 5px;
 }
 
 header p {
     color: var(--text-muted);
     font-size: 1.1rem;
+    text-align: left;
+    margin-top: -5px;
 }
 
-main {
-    width: 100%;
-    max-width: 600px;
-}
+main { width: 100%; max-width: 600px; }
 
 .card {
     background: var(--card-bg);
-    padding: 30px;
+    padding: 25px;
     border-radius: var(--radius);
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
     border: 1px solid var(--border);
     margin-bottom: 25px;
     animation: fadeIn 0.4s ease-out;
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
 @keyframes fadeIn {
@@ -70,24 +86,16 @@ main {
 label {
     display: block;
     font-weight: 600;
-    margin: 20px 0 8px;
+    margin: 18px 0 8px;
     font-size: 0.95rem;
     color: var(--primary);
 }
 
-label:first-of-type {
-    margin-top: 0;
-}
-
-.math-text {
-    font-family: 'Lora', serif;
-    font-style: italic;
-    font-size: 1.1rem;
-}
+.math-text { font-family: 'Lora', serif; font-style: italic; font-size: 1.1rem; }
 
 input, select, button {
     width: 100%;
-    padding: 14px 16px;
+    padding: 12px 14px;
     border: 1px solid var(--border);
     border-radius: 8px;
     font-size: 1rem;
@@ -100,121 +108,90 @@ input, select, button {
 input:focus, select:focus {
     outline: none;
     border-color: var(--accent);
-    background: #ffffff;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    background: var(--card-bg);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
-small {
-    color: var(--text-muted);
-    font-size: 0.8rem;
-    display: block;
-    margin-top: 6px;
-}
+small { color: var(--text-muted); font-size: 0.8rem; display: block; margin-top: 6px; }
 
-/* Live Math Preview Box */
 .math-preview {
-    margin-top: 12px;
-    padding: 15px;
-    background: #f1f5f9;
+    margin-top: 10px;
+    padding: 12px;
+    background: rgba(148, 163, 184, 0.1);
     border-radius: 8px;
     text-align: center;
     font-size: 1.2rem;
-    min-height: 50px;
+    min-height: 45px;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow-x: auto;
 }
 
-.row {
-    display: flex;
-    gap: 15px;
-}
+.row { display: flex; gap: 15px; }
 
 button {
     background-color: var(--primary);
-    color: white;
+    color: var(--bg);
     border: none;
     font-weight: 600;
-    font-size: 1.05rem;
-    margin-top: 30px;
+    font-size: 1rem;
+    margin-top: 25px;
     cursor: pointer;
     letter-spacing: 0.5px;
 }
 
-button:hover {
-    background-color: #1e293b;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
-}
+button:hover { opacity: 0.9; transform: translateY(-1px); }
+button:active { transform: translateY(1px); }
 
-button:active {
-    transform: translateY(1px);
-}
-
-.hidden {
-    display: none !important;
-}
-
-/* Results Table */
-h2 {
-    font-family: 'Lora', serif;
+.btn-secondary {
+    background-color: transparent;
     color: var(--primary);
-    margin-bottom: 15px;
-    font-size: 1.5rem;
+    border: 1px solid var(--border);
+    margin-top: 15px;
+    font-size: 0.9rem;
+}
+.btn-secondary:hover { background-color: rgba(148, 163, 184, 0.1); }
+
+.icon-btn {
+    width: auto;
+    padding: 10px;
+    background: transparent;
+    border: 1px solid var(--border);
+    font-size: 1.2rem;
+    border-radius: 50%;
+    margin: 0;
+    color: var(--text-main);
 }
 
-.table-container {
-    overflow-x: auto;
+.divider { border: 0; height: 1px; background: var(--border); margin: 20px 0; }
+
+.hidden { display: none !important; }
+
+h2 { font-family: 'Lora', serif; color: var(--primary); margin-bottom: 15px; font-size: 1.5rem; }
+
+/* Graph Container */
+.graph-container {
+    position: relative;
+    height: 300px;
+    width: 100%;
+    margin: 20px 0;
+    background: var(--card-bg);
     border-radius: 8px;
     border: 1px solid var(--border);
+    padding: 10px;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.95rem;
-}
+.table-container { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border); margin-top: 10px; }
 
-th, td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-}
+table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+th { background-color: rgba(148, 163, 184, 0.1); font-weight: 600; color: var(--primary); }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background-color: rgba(148, 163, 184, 0.05); }
 
-th {
-    background-color: #f8fafc;
-    font-weight: 600;
-    color: var(--primary);
-}
-
-tr:last-child td {
-    border-bottom: none;
-}
-
-tr:hover td {
-    background-color: #f8fafc;
-}
-
-.success {
-    background: #ecfdf5;
-    color: var(--success);
-    padding: 12px;
-    border-radius: 8px;
-    font-weight: 600;
-    margin-bottom: 15px;
-    border-left: 4px solid var(--success);
-}
-
-.error {
-    background: #fef2f2;
-    color: var(--error);
-    padding: 12px;
-    border-radius: 8px;
-    font-weight: 600;
-    margin-bottom: 15px;
-    border-left: 4px solid var(--error);
-}
+.success { background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 12px; border-radius: 8px; font-weight: 600; margin-bottom: 15px; border-left: 4px solid var(--success); }
+.error { background: rgba(239, 68, 68, 0.1); color: var(--error); padding: 12px; border-radius: 8px; font-weight: 600; margin-bottom: 15px; border-left: 4px solid var(--error); }
 
 @media (max-width: 500px) {
     .card { padding: 20px; }
