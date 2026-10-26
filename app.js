@@ -10,7 +10,6 @@ function parseToJS(expr) {
     return expr;
 }
 
-// Returns null for invalid math (used for graphing so it doesn't crash on asymptotes)
 function safeEval(expr, x) {
     try {
         const func = new Function("x", `return ${expr};`);
@@ -22,7 +21,6 @@ function safeEval(expr, x) {
     }
 }
 
-// Throws errors (used for calculations to stop the loop if something goes wrong)
 function safeEvalStrict(expr, x) {
     try {
         const func = new Function("x", `return ${expr};`);
@@ -116,7 +114,7 @@ function loadExample(exId) {
     } else if (exId === 'ex3') {
         document.getElementById("func_f").value = "x^3 - 2x - 5";
         document.getElementById("method").value = "bisection";
-        document.getElementById("a").value = "2.0";
+        document.getElementById("a").value = "-2.0"; // Demonstrating a negative number
         document.getElementById("b").value = "3.0";
     }
     updateInputs();
@@ -169,10 +167,7 @@ let chartInstance = null;
 
 function renderGraph(exprF, root, p0, a, b) {
     const ctx = document.getElementById('graphCanvas').getContext('2d');
-    
-    if (chartInstance) {
-        chartInstance.destroy();
-    }
+    if (chartInstance) chartInstance.destroy();
 
     let center = root !== null ? root : (p0 !== null ? p0 : (a !== null ? a : 0));
     let range = 2; 
@@ -252,8 +247,25 @@ function calculate() {
     
     let finalRoot = null;
     let p0 = parseFloat(document.getElementById("p0").value);
+    let p1 = parseFloat(document.getElementById("p1").value);
     let a = parseFloat(document.getElementById("a").value);
     let b = parseFloat(document.getElementById("b").value);
+
+    // Safety check to ensure inputs are actually numbers (e.g. if user typed just a "-")
+    if (method === "bisection" && (isNaN(a) || isNaN(b))) {
+        setupTable("Input Error", "Please enter valid numbers for interval [a, b].", true);
+        return;
+    }
+    if (method === "newton" || method === "fixed" || method === "aitken" || method === "steffensen") {
+        if (isNaN(p0)) {
+            setupTable("Input Error", "Please enter a valid number for initial guess p0.", true);
+            return;
+        }
+    }
+    if (method === "secant" && (isNaN(p0) || isNaN(p1))) {
+        setupTable("Input Error", "Please enter valid numbers for p0 and p1.", true);
+        return;
+    }
 
     try {
         if (method === "bisection") {
@@ -303,7 +315,6 @@ function calculate() {
             }
         } else if (method === "secant") {
             setupTable("Secant Method", "");
-            let p1 = parseFloat(document.getElementById("p1").value);
             for (let i = 1; i <= maxIter; i++) {
                 let f_p0 = safeEvalStrict(exprF, p0);
                 let f_p1 = safeEvalStrict(exprF, p1);
@@ -338,11 +349,11 @@ function calculate() {
                     }
                     p = pNew;
                 } else {
-                    let p1 = safeEvalStrict(exprG, p);
-                    let p2 = safeEvalStrict(exprG, p1);
-                    let denom = p2 - 2*p1 + p;
+                    let p1_inner = safeEvalStrict(exprG, p);
+                    let p2 = safeEvalStrict(exprG, p1_inner);
+                    let denom = p2 - 2*p1_inner + p;
                     if (Math.abs(denom) < 1e-15) throw new Error("Denominator near zero.");
-                    let pNew = p - Math.pow(p1 - p, 2) / denom;
+                    let pNew = p - Math.pow(p1_inner - p, 2) / denom;
                     
                     if (method === "steffensen") {
                         let err = Math.abs(pNew - p);
@@ -365,7 +376,7 @@ function calculate() {
                             renderGraph(exprF, finalRoot, p0, null, null);
                             return;
                         }
-                        p = p1;
+                        p = p1_inner;
                         pHatOld = pNew;
                     }
                 }
