@@ -5,12 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nemerica | Numerical Root Finder</title>
     
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital,wght@0,500;1,400&display=swap" rel="stylesheet">
     
+    <!-- KaTeX for Math Rendering -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    
+    <!-- Chart.js for Graphing -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <link rel="stylesheet" href="style.css">
@@ -59,29 +63,28 @@
                 <div id="preview_g" class="math-preview"></div>
             </div>
 
+            <!-- Changed inputs below to type="text" so mobile keyboards show the minus sign -->
             <div id="p0_box">
                 <label for="p0">Initial Guess <span class="math-text">p<sub>0</sub></span></label>
-                <!-- Changed to text to allow negative signs on mobile -->
                 <input type="text" inputmode="text" id="p0" value="1.0">
             </div>
 
             <div id="p1_box" class="hidden">
                 <label for="p1">Second Guess <span class="math-text">p<sub>1</sub></span></label>
-                <!-- Changed to text to allow negative signs on mobile -->
                 <input type="text" inputmode="text" id="p1" value="2.0">
             </div>
 
             <div id="interval_box" class="hidden">
                 <label>Interval <span class="math-text">[a, b]</span></label>
                 <div class="row">
-                    <!-- Changed to text to allow negative signs on mobile -->
                     <input type="text" inputmode="text" id="a" value="1.0" placeholder="a">
                     <input type="text" inputmode="text" id="b" value="2.0" placeholder="b">
                 </div>
             </div>
+            <!-- End of changed inputs -->
 
             <label for="tol">Tolerance (Leave blank for default 0.01)</label>
-            <input type="text" inputmode="text" id="tol" placeholder="e.g., 1e-5">
+            <input type="text" inputmode="decimal" id="tol" placeholder="e.g., 1e-5">
 
             <button onclick="calculate()">Solve Equation</button>
         </div>
@@ -90,6 +93,7 @@
             <h2 id="result_title">Results</h2>
             <div id="message"></div>
             
+            <!-- Graph Container -->
             <div class="graph-container">
                 <canvas id="graphCanvas"></canvas>
             </div>
