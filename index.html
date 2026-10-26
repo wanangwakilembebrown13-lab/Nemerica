@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nemerica | Numerical Root Finder</title>
+    
+    <!-- Google Fonts for elegant typography (Low bandwidth, cached globally) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital,wght@0,500;1,400&display=swap" rel="stylesheet">
+    
+    <!-- KaTeX for incredibly fast math rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Nemerica</h1>
+        <p>Numerical Root Finding, Beautifully Done.</p>
+    </header>
+
+    <main>
+        <div class="card">
+            <label for="func_f">Equation to Solve: <span class="math-text">f(x) = 0</span></label>
+            <input type="text" id="func_f" placeholder="e.g., x^3 - x - 1" oninput="updatePreview('func_f', 'preview_f')">
+            <div id="preview_f" class="math-preview"></div>
+            <small>Use LaTeX syntax: \sin(x), \sqrt{x}, \exp(x), \pi, e.</small>
+
+            <label for="method">Algorithm</label>
+            <select id="method" onchange="updateInputs()">
+                <option value="newton">Newton's Method</option>
+                <option value="fixed">Fixed-Point Iteration</option>
+                <option value="secant">Secant Method</option>
+                <option value="bisection">Bisection Method</option>
+                <option value="aitken">Aitken's Delta^2</option>
+                <option value="steffensen">Steffensen's Method</option>
+            </select>
+
+            <div id="g_box" class="hidden">
+                <label for="func_g">Iteration Function: <span class="math-text">x = g(x)</span></label>
+                <input type="text" id="func_g" placeholder="e.g., (x + 1)^(1/3)" oninput="updatePreview('func_g', 'preview_g')">
+                <div id="preview_g" class="math-preview"></div>
+            </div>
+
+            <div id="p0_box">
+                <label for="p0">Initial Guess <span class="math-text">p<sub>0</sub></span></label>
+                <input type="number" id="p0" step="any" value="1.0">
+            </div>
+
+            <div id="p1_box" class="hidden">
+                <label for="p1">Second Guess <span class="math-text">p<sub>1</sub></span></label>
+                <input type="number" id="p1" step="any" value="2.0">
+            </div>
+
+            <div id="interval_box" class="hidden">
+                <label>Interval <span class="math-text">[a, b]</span></label>
+                <div class="row">
+                    <input type="number" id="a" step="any" value="1.0" placeholder="a">
+                    <input type="number" id="b" step="any" value="2.0" placeholder="b">
+                </div>
+            </div>
+
+            <label for="tol">Tolerance (Leave blank for default 0.01)</label>
+            <input type="text" id="tol" placeholder="e.g., 1e-5">
+
+            <button onclick="calculate()">Solve Equation</button>
+        </div>
+
+        <div id="results" class="card hidden">
+            <h2 id="result_title">Results</h2>
+            <div id="message"></div>
+            <div class="table-container">
+                <table id="result_table">
+                    <thead>
+                        <tr>
+                            <th>Iter</th>
+                            <th><span class="math-text">p<sub>i</sub></span></th>
+                            <th>Error</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
