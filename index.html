@@ -5,32 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nemerica | Numerical Root Finder</title>
     
-    <!-- Google Fonts for elegant typography (Low bandwidth, cached globally) -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital,wght@0,500;1,400&display=swap" rel="stylesheet">
     
-    <!-- KaTeX for incredibly fast math rendering -->
+    <!-- KaTeX for Math Rendering -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    
+    <!-- Chart.js for Graphing -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <h1>Nemerica</h1>
+        <div class="header-top">
+            <h1>Nemerica</h1>
+            <button id="theme-toggle" class="icon-btn" onclick="toggleTheme()">🌙</button>
+        </div>
         <p>Numerical Root Finding, Beautifully Done.</p>
     </header>
 
     <main>
         <div class="card">
+            <div class="example-box">
+                <label for="examples" style="margin-top:0;">Load an Example Problem</label>
+                <select id="examples" onchange="loadExample(this.value)">
+                    <option value="">-- Select an example --</option>
+                    <option value="ex1">Newton: x - \cos(x) = 0</option>
+                    <option value="ex2">Fixed-Point: x^3 - x - 1 = 0</option>
+                    <option value="ex3">Bisection: x^3 - 2x - 5 = 0</option>
+                </select>
+            </div>
+
+            <hr class="divider">
+
             <label for="func_f">Equation to Solve: <span class="math-text">f(x) = 0</span></label>
             <input type="text" id="func_f" placeholder="e.g., x^3 - x - 1" oninput="updatePreview('func_f', 'preview_f')">
             <div id="preview_f" class="math-preview"></div>
             <small>Use LaTeX syntax: \sin(x), \sqrt{x}, \exp(x), \pi, e.</small>
 
             <label for="method">Algorithm</label>
-            <select id="method" onchange="updateInputs()">
+            <select id="method" onchange="updateInputs(); saveState();">
                 <option value="newton">Newton's Method</option>
                 <option value="fixed">Fixed-Point Iteration</option>
                 <option value="secant">Secant Method</option>
@@ -47,24 +65,24 @@
 
             <div id="p0_box">
                 <label for="p0">Initial Guess <span class="math-text">p<sub>0</sub></span></label>
-                <input type="number" id="p0" step="any" value="1.0">
+                <input type="number" inputmode="decimal" id="p0" step="any" value="1.0">
             </div>
 
             <div id="p1_box" class="hidden">
                 <label for="p1">Second Guess <span class="math-text">p<sub>1</sub></span></label>
-                <input type="number" id="p1" step="any" value="2.0">
+                <input type="number" inputmode="decimal" id="p1" step="any" value="2.0">
             </div>
 
             <div id="interval_box" class="hidden">
                 <label>Interval <span class="math-text">[a, b]</span></label>
                 <div class="row">
-                    <input type="number" id="a" step="any" value="1.0" placeholder="a">
-                    <input type="number" id="b" step="any" value="2.0" placeholder="b">
+                    <input type="number" inputmode="decimal" id="a" step="any" value="1.0" placeholder="a">
+                    <input type="number" inputmode="decimal" id="b" step="any" value="2.0" placeholder="b">
                 </div>
             </div>
 
             <label for="tol">Tolerance (Leave blank for default 0.01)</label>
-            <input type="text" id="tol" placeholder="e.g., 1e-5">
+            <input type="text" inputmode="decimal" id="tol" placeholder="e.g., 1e-5">
 
             <button onclick="calculate()">Solve Equation</button>
         </div>
@@ -72,18 +90,26 @@
         <div id="results" class="card hidden">
             <h2 id="result_title">Results</h2>
             <div id="message"></div>
+            
+            <!-- Graph Container -->
+            <div class="graph-container">
+                <canvas id="graphCanvas"></canvas>
+            </div>
+
             <div class="table-container">
                 <table id="result_table">
                     <thead>
                         <tr>
                             <th>Iter</th>
                             <th><span class="math-text">p<sub>i</sub></span></th>
+                            <th><span class="math-text">f(p<sub>i</sub>)</span></th>
                             <th>Error</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
                 </table>
             </div>
+            <button class="btn-secondary" onclick="downloadCSV()">⬇ Download Table (CSV)</button>
         </div>
     </main>
 
